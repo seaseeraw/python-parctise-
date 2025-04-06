@@ -1,27 +1,29 @@
-from flask import Flask, render_template, request, redirect, url_for
+import random
 
-app = Flask(__name__)
+# Step 1: Generate a random number between 1 and 100
+secret_number = random.randint(1, 100)
+attempts = 0
 
-tasks = []
+print("Welcome to Guess the Number Game!")
+print("I'm thinking of a number between 1 and 100.")
 
-@app.route("/")
-def home():
-    return render_template("index.html", tasks=tasks)
+# Step 2: Keep asking until the player guesses right
+while True:
+    guess = input("Enter your guess: ")
+    attempts += 1
 
-@app.route("/add", methods=["POST"])
-def add_task():
-    task = request.form.get("task")
-    if task:
-        tasks.append(task)
-    return redirect(url_for("home"))
+    # Step 3: Make sure input is a number
+    if not guess.isdigit():
+        print("Please enter a valid number.")
+        continue
 
-@app.route("/delete/<int:task_id>")
-def delete_task(task_id):
-    # Ensure task_id is within the list range
-    if 0 <= task_id < len(tasks):
-        tasks.pop(task_id)
-    return redirect(url_for("home"))
+    guess = int(guess)
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
+    # Step 4: Give hints
+    if guess < secret_number:
+        print("Too low! Try again.")
+    elif guess > secret_number:
+        print("Too high! Try again.")
+    else:
+        print(f"🎉 Correct! The number was {secret_number}. You guessed it in {attempts} tries.")
+        break
